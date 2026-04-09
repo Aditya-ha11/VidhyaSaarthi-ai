@@ -1,0 +1,38 @@
+[
+  {
+    "id": "LOAN001",
+    "provider": "State Bank of India",
+    "max_income": 1200000,
+    "interest": 7.5,
+    "max_amount": 2000000,
+    "tenure_years": 15,
+    "description": "Education loan with government subsidy"
+  },
+  {
+    "id": "LOAN002",
+    "provider": "ABC Bank",
+    "max_income": 800000,
+    "interest": 8.5,
+    "max_amount": 1500000,
+    "tenure_years": 10,
+    "description": "Flexible repayment education loan"
+  },
+  {
+    "id": "LOAN003",
+    "provider": "Canara Bank",
+    "max_income": 600000,
+    "interest": 9.0,
+    "max_amount": 1000000,
+    "tenure_years": 7,
+    "description": "Quick disbursal student loan"
+  },
+  {
+    "id": "LOAN004",
+    "provider": "PM Vidya Lakshmi",
+    "max_income": 500000,
+    "interest": 4.0,
+    "max_amount": 500000,
+    "tenure_years": 5,
+    "description": "Government subsidized scheme for low-income families"
+  }
+]

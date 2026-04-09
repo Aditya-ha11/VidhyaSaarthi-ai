@@ -1,0 +1,13 @@
+Scheme_ID,Ministry,Scheme_Name,Target_Category,Income_Ceiling_INR,Min_Marks_Percentage,Award_Amount_INR,Description
+NSP001,Minority Affairs,Post Matric Scholarships Scheme for Minorities,OBC|SC|ST,200000,50,10000,"Scholarship for deserving minority students pursuing higher education."
+NSP002,Social Justice,Post Matric Scholarship for SC Students,SC,250000,50,18000,"Financial assistance to SC students studying at post matriculation levels."
+NSP003,Tribal Affairs,National Fellowship and Scholarship for Higher Education of ST Students,ST,600000,60,25000,"Empowering scheduled tribe students for higher academic excellence."
+NSP004,Higher Education,Central Sector Scheme of Scholarships for College and University Students,ALL,800000,80,10000,"Awarded to top meritorious students applying for degree courses."
+NSP005,School Education,National Means Cum Merit Scholarship,ALL,350000,55,12000,"Incentivizing intelligent students from low-income brackets."
+NSP006,Social Justice,Pre-Matric Scholarship for OBC Students,OBC,250000,50,5000,"Early education financial aid for Other Backward Classes."
+NSP007,AICTE,Pragati Scholarship Scheme For Girl Students (Technical Degree),ALL,800000,60,50000,"Encouraging women and girl children to pursue technical and engineering disciplines."
+NSP008,Labor and Employment,Financial Assistance for Education to the Wards of Beedi/Cine/IOMC/LSDM Workers - Post-Matric,ALL,100000,50,15000,"Supporting the education of children of registered labor workers."
+NSP009,Higher Education,Ishan Uday Special Scholarship Scheme for North Eastern Region,ALL,450000,60,54000,"Promoting higher education and encouraging students of the NER."
+NSP010,Higher Education,Special Scholarship Scheme for Jammu Kashmir and Ladakh,ALL,800000,50,100000,"Covering tuition and hostel fees for students from J&K and Ladakh."
+NSP011,AICTE,Saksham Scholarship Scheme for Specially Abled Students (Degree),ALL,800000,50,50000,"Providing support to specially-abled students for higher technical courses."
+NSP012,Empowerment of Persons with Disabilities,Scholarships for Top Class Education for students with disabilities,ALL,600000,50,150000,"Full coverage for studying in top-class institutions for students with disabilities."

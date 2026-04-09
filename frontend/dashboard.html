@@ -1,0 +1,2099 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VidyaSaarthi AI — Admin Portal</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-light: #eff6ff;
+      --success: #10b981;
+      --success-dark: #059669;
+      --success-light: #dcfce7;
+      --warning: #f59e0b;
+      --warning-light: #fef3c7;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --bg-app: #f8fafc;
+      --bg-white: #ffffff;
+      --border: #e2e8f0;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --sidebar-width: 260px;
+      --hover-bg: #f1f5f9;
+    }
+
+    [data-theme="dark"] {
+      --primary: #3b82f6;
+      --primary-hover: #60a5fa;
+      --primary-light: #1e3a8a;
+      --success: #10b981;
+      --success-dark: #34d399;
+      --success-light: #064e3b;
+      --warning: #f59e0b;
+      --warning-light: #78350f;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --bg-app: #0f172a;
+      --bg-white: #1e293b;
+      --border: #334155;
+      --hover-bg: rgba(255, 255, 255, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-app);
+      color: var(--text-main);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .app-layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: var(--sidebar-width);
+      background: var(--bg-white);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 50;
+    }
+
+    .sidebar-header {
+      padding: 24px;
+    }
+
+    .brand-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .brand-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 0 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+      width: 100%;
+    }
+
+    .nav-item:hover {
+      background: var(--hover-bg);
+      color: var(--text-main);
+      transform: translateX(4px);
+    }
+
+    .nav-item.active {
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .sidebar-footer {
+      padding: 20px 16px;
+    }
+
+    .ai-assistant-btn {
+      width: 100%;
+      padding: 12px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .ai-assistant-btn:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+
+    .ai-assistant-btn:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      margin-left: var(--sidebar-width);
+      padding: 32px 48px;
+    }
+
+    h2.page-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--text-main);
+    }
+
+    p.page-subtitle {
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      font-size: 0.95rem;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--bg-white);
+      border-radius: 12px;
+      padding: 24px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 24px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .grid-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group.full {
+      grid-column: 1/-1;
+    }
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    input,
+    select {
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-family: 'Inter', sans-serif;
+      color: var(--text-main);
+      background: var(--bg-white);
+      transition: border-color 0.2s;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px var(--primary-light);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 14px 24px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    /* Green Banner Card */
+    .success-banner {
+      background: var(--success);
+      border-radius: 12px;
+      color: white;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .success-banner-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .success-banner-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .success-banner-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+    }
+
+    .success-box {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .success-box-label {
+      font-size: 0.8rem;
+      opacity: 0.9;
+      margin-bottom: 4px;
+    }
+
+    .success-box-value {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    /* Assessment Items */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .assessment-item {
+      padding: 16px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      display: flex;
+      gap: 12px;
+      background: var(--bg-white);
+      transition: all 0.2s ease;
+    }
+
+    .assessment-item:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
+      border-color: rgba(37, 99, 235, 0.2);
+    }
+
+    .assessment-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+
+    .icon-green {
+      background: var(--success-light);
+      color: var(--success-dark);
+    }
+
+    .icon-yellow {
+      background: var(--warning-light);
+      color: var(--warning);
+    }
+
+    .assessment-title {
+      font-weight: 500;
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+      color: var(--text-main);
+    }
+
+    .assessment-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* Metrics top bar */
+    .metrics-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .metric-card {
+      background: var(--bg-white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      transition: all 0.2s ease;
+    }
+
+    .metric-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .metric-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .metric-value {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    /* List Cards */
+    .list-card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+      background: var(--bg-white);
+      position: relative;
+      transition: all 0.2s ease;
+    }
+
+    .list-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      border-color: rgba(37, 99, 235, 0.3);
+    }
+
+    .list-card-badge {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: var(--primary-light);
+      color: var(--primary);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .list-card-badge.status-approved {
+      background: var(--success-light);
+      color: var(--success-dark);
+    }
+
+    .list-card-badge.status-review {
+      background: var(--warning-light);
+      color: var(--warning);
+    }
+
+    .list-card-header {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .list-card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: var(--primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      font-size: 1.2rem;
+    }
+
+    .list-card-icon.accent-yellow {
+      background: var(--warning-light);
+      color: var(--warning);
+    }
+
+    .list-card-icon.accent-green {
+      background: var(--success-light);
+      color: var(--success-dark);
+    }
+
+    .list-card-icon.accent-gray {
+      background: #f1f5f9;
+      color: #64748b;
+    }
+
+    .list-card-content {
+      flex: 1;
+    }
+
+    .list-card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .list-card-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .list-card-stats {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .stat-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .stat-val {
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    .list-card-match {
+      color: var(--success);
+      font-size: 0.85rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 8px;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-outline:hover {
+      background: var(--primary-light);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(37, 99, 235, 0.1);
+    }
+
+    .btn-outline:active {
+      transform: translateY(0) scale(0.96);
+    }
+
+    .btn-solid {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-solid:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2);
+    }
+
+    .btn-solid:active {
+      transform: translateY(0) scale(0.96);
+    }
+
+    /* Custom Modals and Toasts */
+    .custom-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.4);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      animation: modalFadeIn 0.2s ease-out forwards;
+    }
+
+    .custom-modal {
+      background: white;
+      border-radius: 16px;
+      padding: 32px;
+      width: 90%;
+      max-width: 420px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      animation: modalSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .custom-toast-container {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 10000;
+    }
+
+    .custom-toast {
+      background: #1e293b;
+      color: white;
+      padding: 16px 24px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      font-weight: 500;
+      animation: toastSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes modalFadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes modalSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes toastSlideIn {
+      from {
+        opacity: 0;
+        transform: translateX(40px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* Progress Bar (Application Tracking) */
+    .progress-track {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 24px;
+      position: relative;
+      padding: 0 10px;
+    }
+
+    .progress-line {
+      position: absolute;
+      top: 18px;
+      left: 24px;
+      right: 24px;
+      height: 2px;
+      background: var(--border);
+      z-index: 1;
+    }
+
+    .progress-line-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      background: var(--success);
+      transition: width 0.3s;
+    }
+
+    .progress-step {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .step-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--bg-white);
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .step-icon.done {
+      background: var(--success);
+      border-color: var(--success);
+      color: white;
+    }
+
+    .step-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .step-label.done {
+      color: var(--success-dark);
+    }
+
+    .tracking-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Complaint Ranker Specific styling */
+    .complaint-section {
+      background: var(--bg-white);
+      border-radius: 12px;
+      padding: 24px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      margin-top: 24px;
+    }
+
+    .complaint-input-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      margin-top: 16px;
+    }
+
+    .complaint-input-row input {
+      flex: 1;
+    }
+
+    .btn-gold {
+      background: #d4af37;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-gold:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+    }
+
+    .btn-gold:active {
+      transform: translateY(0) scale(0.96);
+    }
+
+    .btn-dark {
+      background: var(--text-main);
+      color: #d4af37;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-dark:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-dark:active {
+      transform: translateY(0) scale(0.96);
+    }
+
+    .tag-critical {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .tag-high {
+      background: #ffedd5;
+      color: #9a3412;
+    }
+
+    .tag-medium {
+      background: var(--warning-light);
+      color: #b45309;
+    }
+
+    .tag-low {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .agent-flow {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .agent-step {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      background: var(--border);
+      color: var(--text-muted);
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .agent-step.active {
+      background: var(--primary-light);
+      color: var(--primary);
+      border: 1px solid var(--primary);
+      transform: scale(1.05);
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15);
+    }
+
+    .agent-step.done {
+      background: var(--success-light);
+      color: var(--success-dark);
+    }
+
+    .loading-spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.4s ease both;
+      width: 100%;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .nav-icon {
+      width: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const API_BASE = "http://localhost:5000";
+
+    // Authentication Check
+    if (!localStorage.getItem('token')) {
+      window.location.href = 'index.html';
+    }
+
+    const AGENTS = [
+      { key: "master", name: "Master" },
+      { key: "eligibility", name: "Eligibility" },
+      { key: "scholarship", name: "Scholarship" },
+      { key: "document", name: "Document" },
+      { key: "loan", name: "Loan" },
+      { key: "disbursal", name: "Disbursal" },
+      { key: "explanation", name: "Explanation" }
+    ];
+
+    function ComplaintRanker() {
+      const [complaints, setComplaints] = useState([]);
+      const [input, setInput] = useState("");
+      const [ranked, setRanked] = useState([]);
+      const [loading, setLoading] = useState(false);
+
+      const addComplaint = () => {
+        if (input.trim()) { setComplaints([...complaints, input.trim()]); setInput(""); }
+      };
+
+      const rankComplaints = async () => {
+        if (!complaints.length) return;
+        setLoading(true);
+        try {
+          const res = await fetch(`${API_BASE}/rank-complaints`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ complaints })
+          });
+          const data = await res.json();
+          setRanked(data.ranked_complaints || []);
+        } catch (e) {
+          // Fallback
+          const keywords = { critical: ["fraud", "theft", "illegal", "emergency", "scam", "abuse"], high: ["wrong", "delay", "missing", "rejected", "error", "failed"], medium: ["issue", "problem", "pending", "late"], low: ["suggestion", "feedback", "request"] };
+          const weights = { critical: 100, high: 60, medium: 30, low: 10 };
+          const scored = complaints.map(c => {
+            let score = 0, sev = "low";
+            for (const [lvl, kws] of Object.entries(keywords)) {
+              if (kws.some(k => c.toLowerCase().includes(k))) { score = weights[lvl]; sev = lvl; break; }
+            }
+            return { complaint: c, urgency_score: score, severity: sev };
+          });
+          setRanked(scored.sort((a, b) => b.urgency_score - a.urgency_score));
+        }
+        setLoading(false);
+      };
+
+      const tagClass = { critical: "tag-critical", high: "tag-high", medium: "tag-medium", low: "tag-low" };
+
+      return (
+        <div className="complaint-section">
+          <h3 style={{ fontWeight: 700, display: 'flex', alignItems: 'center', gap: 8 }}>⚠️ Complaint Urgency Ranker</h3>
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: 4 }}>Add student complaints — the AI ranks them by urgency and severity.</p>
+
+          <div className="complaint-input-row">
+            <input value={input} onChange={e => setInput(e.target.value)}
+              onKeyDown={e => e.key === "Enter" && addComplaint()}
+              placeholder="Enter a complaint..." />
+            <button className="btn-gold" onClick={addComplaint}>Add</button>
+          </div>
+
+          {complaints.length > 0 && (
+            <div style={{ marginBottom: 16, display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+              {complaints.map((c, i) => (
+                <span key={i} style={{ background: '#f9fafb', padding: '4px 12px', borderRadius: 20, fontSize: '0.8rem', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: 8 }}>
+                  {c}
+                  <span style={{ cursor: 'pointer', color: '#dc2626', fontWeight: 700 }} onClick={() => setComplaints(complaints.filter((_, j) => j !== i))}>×</span>
+                </span>
+              ))}
+            </div>
+          )}
+
+          {complaints.length > 0 && (
+            <button className="btn-dark" onClick={rankComplaints} disabled={loading}>
+              🏷️ Rank by Urgency ({complaints.length})
+            </button>
+          )}
+          {ranked.map((item, i) => (
+            <div key={i} style={{ background: '#fafaf9', borderLeft: '4px solid #d4af37', padding: '12px 16px', borderRadius: '0 8px 8px 0', marginBottom: 8, display: 'flex', gap: 16 }}>
+              <span style={{ fontSize: '1.2rem', fontWeight: 700, color: '#d1d5db' }}>#{i + 1}</span>
+              <div>
+                <div style={{ marginBottom: 6, fontSize: '0.9rem', color: 'var(--text-main)' }}>{item.complaint}</div>
+                <span style={{ padding: '4px 10px', borderRadius: 20, fontSize: '0.7rem', fontWeight: 600 }} className={tagClass[item.severity]}>
+                  {item.severity.toUpperCase()} • Score: {item.urgency_score}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    function Sidebar({ activeTab, setActiveTab, darkMode, setDarkMode, setChatOpen }) {
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      const isAdmin = user.role === 'Admin';
+      const navs = [
+        { id: "Home", icon: "🏠" },
+        { id: "Dashboard", icon: "📊" },
+        { id: "Profile & Documents", icon: "👤" },
+        { id: "Scholarships", icon: "🎓" },
+        { id: "Loans", icon: "🏦" },
+        { id: "Applications", icon: "📄" },
+        ...(isAdmin ? [{ id: "Admin Panel", icon: "🛡️" }] : [])
+      ];
+
+      return (
+        <aside className="sidebar">
+          <div className="sidebar-header">
+            <div className="brand-title">VidyaSaarthi AI</div>
+            <div className="brand-subtitle">Student Funding System</div>
+          </div>
+          <nav className="sidebar-nav">
+            {navs.map(n => (
+              <button key={n.id} className={`nav-item ${activeTab === n.id ? 'active' : ''}`} onClick={() => setActiveTab(n.id)}>
+                <span className="nav-icon">{n.icon}</span>
+                {n.id}
+              </button>
+            ))}
+          </nav>
+          <div className="sidebar-footer">
+            <button className="nav-item" onClick={() => { localStorage.removeItem('token'); window.location.href = 'index.html'; }} style={{ marginBottom: '12px', justifyContent: 'center', background: 'var(--bg-app)', border: '1px solid var(--border)', color: '#dc2626' }}>
+              🚪 Logout
+            </button>
+            <button className="nav-item" onClick={() => setDarkMode(!darkMode)} style={{ marginBottom: '12px', justifyContent: 'center', background: 'var(--bg-app)', border: '1px solid var(--border)' }}>
+              {darkMode ? '☀️ Light Mode' : '🌙 Dark Mode'}
+            </button>
+            <button className="ai-assistant-btn" onClick={() => setChatOpen(prev => !prev)}>
+              💬 AI Assistant
+            </button>
+          </div>
+        </aside>
+      );
+    }
+
+    function PageHome({ form, setForm, handleSubmit, loading, error, activeAgentIdx }) {
+      return (
+        <div className="fade-in">
+          <h2 className="page-title">Start Your Funding Journey</h2>
+          <p className="page-subtitle">Get matched with scholarships and loans instantly using AI.</p>
+
+          {activeAgentIdx >= 0 && activeAgentIdx < AGENTS.length && (
+            <div className="agent-flow">
+              {AGENTS.map((a, i) => (
+                <span key={a.key} className={`agent-step ${i === activeAgentIdx ? 'active' : i < activeAgentIdx ? 'done' : ''}`}>
+                  {i < activeAgentIdx ? '✓' : ''} {a.name}
+                </span>
+              ))}
+            </div>
+          )}
+
+          <div className="card">
+            {error && <div style={{ background: 'var(--warning-light)', color: 'var(--warning)', padding: 12, borderRadius: 8, marginBottom: 16 }}>{error}</div>}
+            <div className="grid-form">
+              <div className="form-group">
+                <label>Academic Marks (%)</label>
+                <input type="number" value={form.marks} onChange={e => setForm({ ...form, marks: e.target.value })} placeholder="e.g. 85" />
+              </div>
+              <div className="form-group">
+                <label>Annual Family Income (₹)</label>
+                <input type="number" value={form.income} onChange={e => setForm({ ...form, income: e.target.value })} placeholder="e.g. 500000" />
+              </div>
+              <div className="form-group">
+                <label>Category</label>
+                <select value={form.category} onChange={e => setForm({ ...form, category: e.target.value })}>
+                  <option value="General">General</option>
+                  <option value="OBC">OBC</option>
+                  <option value="SC">SC</option>
+                  <option value="ST">ST</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Course / Education Level</label>
+                <select value={form.course_level} onChange={e => setForm({ ...form, course_level: e.target.value })}>
+                  <option value="Class 6–10">Class 6–10</option>
+                  <option value="Plus 2">Plus 2</option>
+                  <option value="ITI / Diploma">ITI / Diploma</option>
+                  <option value="BSc, BBA, BCA, Journalism">BSc, BBA, BCA, Journalism</option>
+                  <option value="Engineering, Medical, Nursing, Pharmacy">Engineering, Medical, Nursing, Pharmacy</option>
+                  <option value="Architecture, BSc Tech">Architecture, BSc Tech</option>
+                  <option value="MA, MCom, MSc">MA, MCom, MSc</option>
+                  <option value="MBA, MCA, MTech">MBA, MCA, MTech</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label>State Domicile</label>
+                <select value={form.state} onChange={e => setForm({ ...form, state: e.target.value })}>
+                  <option value="Andhra Pradesh">Andhra Pradesh</option>
+                  <option value="Assam">Assam</option>
+                  <option value="Bihar">Bihar</option>
+                  <option value="Delhi">Delhi</option>
+                  <option value="Gujarat">Gujarat</option>
+                  <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                  <option value="Karnataka">Karnataka</option>
+                  <option value="Kerala">Kerala</option>
+                  <option value="Maharashtra">Maharashtra</option>
+                  <option value="Madhya Pradesh">Madhya Pradesh</option>
+                  <option value="Odisha">Odisha</option>
+                  <option value="North Eastern Region">North Eastern Region</option>
+                  <option value="Punjab">Punjab</option>
+                  <option value="Rajasthan">Rajasthan</option>
+                  <option value="Tamil Nadu">Tamil Nadu</option>
+                  <option value="Uttar Pradesh">Uttar Pradesh</option>
+                  <option value="West Bengal">West Bengal</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Special Case / Eligibility</label>
+                <select value={form.special_case} onChange={e => setForm({ ...form, special_case: e.target.value })}>
+                  <option value="none">None</option>
+                  <option value="orphan">Orphan / Green Passage</option>
+                  <option value="disability">Specially Abled / Disability</option>
+                  <option value="female">Single Girl Child</option>
+                  <option value="labour">Child of Construction / Labour Worker</option>
+                  <option value="odia">Odia Language Honours</option>
+                  <option value="math_talent">Mathematics Talent</option>
+                </select>
+              </div>
+              <div className="form-group full">
+                <label>Course/Program Fee (₹)</label>
+                <input type="number" value={form.course_fee} onChange={e => setForm({ ...form, course_fee: e.target.value })} placeholder="e.g. 200000" />
+              </div>
+
+              {/* Advanced Underwriting Fields */}
+              <div className="form-group">
+                <label>CIBIL Score / Credit Score</label>
+                <input type="number" value={form.cibil_score} onChange={e => setForm({ ...form, cibil_score: e.target.value })} placeholder="e.g. 750 (0 if unknown)" />
+              </div>
+              {form.course_level !== 'Class 6–10' && form.course_level !== 'Plus 2' && (
+                <div className="form-group">
+                  <label>College Tier</label>
+                  <select value={form.college_tier} onChange={e => setForm({ ...form, college_tier: e.target.value })}>
+                    <option value="Unknown">Unknown / Default</option>
+                    <option value="Tier_1">Tier 1 (IIT, NIT, IIM, etc.)</option>
+                    <option value="Tier_2">Tier 2</option>
+                    <option value="Tier_3">Tier 3</option>
+                  </select>
+                </div>
+              )}
+              <div className="form-group full">
+                <label>Available Collateral / Asset Value (₹)</label>
+                <input type="number" value={form.collateral_amount} onChange={e => setForm({ ...form, collateral_amount: e.target.value })} placeholder="e.g. 500000 (0 if uncollateralized)" />
+              </div>
+              <div className="form-group full">
+                <button className="btn-primary" onClick={handleSubmit} disabled={loading} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 8 }}>
+                  {loading ? <div className="loading-spinner" /> : null}
+                  Evaluate Eligibility
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    function PageDashboard({ result, handleApply }) {
+      if (!result) return <div style={{ padding: 40, textAlign: 'center' }}>Please submit the form first.</div>;
+
+      const shortSummary = [];
+      if (result.eligibility_score >= 80) shortSummary.push("Strong academic profile");
+      else if (result.eligibility_score >= 60) shortSummary.push("Average academic profile");
+      else shortSummary.push("Below average academic profile");
+
+      const scholarshipCount = result.scholarships?.length || 0;
+      if (scholarshipCount > 0) shortSummary.push(`Eligible for ${scholarshipCount} scholarships`);
+
+      if (result.loan_options?.length > 0) {
+        const maxLoan = Math.max(...result.loan_options.map(l => l.amount));
+        shortSummary.push(`Pre-approved for loans up to ₹${maxLoan.toLocaleString()}`);
+      }
+
+      return (
+        <div className="fade-in">
+          <h2 className="page-title">Dashboard Overview</h2>
+          <p className="page-subtitle">Summary of your eligibility and funding profile.</p>
+
+          <div className="metrics-row">
+            <div className="metric-card">
+              <div className="metric-label">Eligibility Score</div>
+              <div className="metric-value" style={{ color: result.decision_zone === 'AUTO_APPROVED' ? 'var(--success-dark)' : result.decision_zone === 'MANUAL_REVIEW' ? 'var(--warning)' : '#ef4444' }}>
+                {result.eligibility_score.toFixed(1)} / 100
+              </div>
+            </div>
+            <div className="metric-card">
+              <div className="metric-label">Status</div>
+              <div className="metric-value" style={{ fontSize: '1.2rem', color: result.disbursal_status === 'Approved' ? 'var(--success-dark)' : 'var(--warning)' }}>
+                {result.disbursal_status}
+              </div>
+            </div>
+          </div>
+
+          <div className="card">
+            <h3 style={{ marginBottom: 16 }}>AI Final Recommendation</h3>
+
+            <div style={{ color: 'var(--text-main)', lineHeight: 1.6, marginBottom: 24, borderTop: '1px solid var(--border)', paddingTop: 16, background: 'var(--bg-app)', padding: '16px', borderRadius: '8px', borderLeft: '4px solid var(--primary)' }}>
+              <strong>AI Summary:</strong>
+              <ul style={{ margin: '8px 0 0 24px' }}>
+                {shortSummary.map((s, i) => <li key={i}>{s}</li>)}
+              </ul>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
+              {result.scholarships?.slice(0, 1).map((s, i) => (
+                <div key={'s' + i} style={{ padding: 16, background: 'var(--bg-white)', border: '1px solid var(--border)', borderRadius: 12, boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--primary)', fontWeight: 600, textTransform: 'uppercase', marginBottom: 8 }}>Scholarship Option</div>
+                  <h4 style={{ margin: '0 0 8px 0' }}>{s.name}</h4>
+                  <div style={{ fontWeight: 700, color: 'var(--text-main)', marginBottom: 16 }}>₹{s.amount.toLocaleString()}</div>
+                  <button className="btn-solid" style={{ width: '100%' }} onClick={() => handleApply(s.name, 'Scholarship')}>Apply</button>
+                </div>
+              ))}
+
+              {result.loan_options?.slice(0, 1).map((l, i) => (
+                <div key={'l' + i} style={{ padding: 16, background: 'var(--bg-white)', border: '1px solid var(--border)', borderRadius: 12, boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+                  <div style={{ fontSize: '0.8rem', color: '#16a34a', fontWeight: 600, textTransform: 'uppercase', marginBottom: 8 }}>Loan Option</div>
+                  <h4 style={{ margin: '0 0 8px 0' }}>{l.provider}</h4>
+                  <div style={{ fontWeight: 700, color: 'var(--text-main)', marginBottom: 16 }}>Up to ₹{l.amount.toLocaleString()} at {l.interest_rate}% p.a.</div>
+                  <button className="btn-solid" style={{ width: '100%', background: '#16a34a', borderColor: '#16a34a' }} onClick={() => handleApply(l.provider, 'Loan')}>Apply</button>
+                </div>
+              ))}
+
+              {result.scholarships?.length > 0 && result.loan_options?.length > 0 && (
+                <div style={{ padding: 16, background: 'var(--primary-light)', border: '1px solid var(--primary)', borderRadius: 12, boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--primary)', fontWeight: 600, textTransform: 'uppercase', marginBottom: 8 }}>Hybrid Option (Recommended)</div>
+                  <h4 style={{ margin: '0 0 8px 0', color: 'var(--primary-dark)' }}>EduFund Hybrid Package</h4>
+                  <div style={{ fontWeight: 700, color: 'var(--primary-dark)', marginBottom: 16 }}>Maximize funding mix</div>
+                  <button className="btn-solid" style={{ width: '100%' }} onClick={() => handleApply('EduFund Hybrid Package', 'Hybrid')}>Apply</button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="card">
+            <h3 style={{ marginBottom: 24, paddingBottom: 12, borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: 8 }}>
+              ⏱️ Application Audit Trail
+            </h3>
+            <div style={{ position: 'relative', paddingLeft: 12 }}>
+              <div style={{ position: 'absolute', top: 16, bottom: 16, left: 19, width: 2, background: 'var(--border)' }}></div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                {result.audit_trail.map((entry, i) => (
+                  <div key={i} style={{ display: 'flex', gap: 16, position: 'relative', zIndex: 1 }}>
+                    <div style={{ width: 16, height: 16, borderRadius: '50%', background: 'var(--bg-white)', border: '4px solid var(--primary)', marginTop: 2, flexShrink: 0, zIndex: 2 }}></div>
+                    <div style={{ flex: 1, padding: '12px 16px', background: 'var(--bg-app)', borderRadius: 12, border: '1px solid var(--border)' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                        <div style={{ fontWeight: 600, color: 'var(--primary)', fontSize: '0.9rem' }}>{entry.step}</div>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', background: 'var(--bg-white)', padding: '2px 8px', borderRadius: 12, border: '1px solid var(--border)' }}>
+                          {new Date(entry.timestamp * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                        </div>
+                      </div>
+                      <div style={{ color: 'var(--text-main)', fontSize: '0.9rem', lineHeight: 1.5 }}>
+                        {entry.message}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    const ALL_LOANS = [
+      { provider: "HDFC Credila", interest_rate: 10.5, amount: 2000000, desc: "Dedicated education loan provider" },
+      { provider: "SBI Student Loan", interest_rate: 8.5, amount: 750000, desc: "Government backed secure loan" },
+      { provider: "Avanse Financial", interest_rate: 11.0, amount: 3000000, desc: "Flexible private financing" },
+      { provider: "Axis Bank Education", interest_rate: 9.8, amount: 1500000, desc: "Streamlined major bank option" },
+      { provider: "InCred Education", interest_rate: 11.5, amount: 2500000, desc: "Easy documentation path" }
+    ];
+
+    function PageLoans({ result, handleApply }) {
+      if (!result) return <div style={{ padding: 40, textAlign: 'center' }}>Please submit the form first.</div>;
+
+      return (
+        <div className="fade-in">
+          <h2 className="page-title">Available Loan Options</h2>
+          <p className="page-subtitle">Explore educational loans from major lenders.</p>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            {ALL_LOANS.map((l, i) => (
+              <div key={i} className="list-card">
+                <div className="list-card-header" style={{ marginBottom: 0 }}>
+                  <div className="list-card-icon accent-gray">🏦</div>
+                  <div className="list-card-content">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                      <div>
+                        <div className="list-card-title">{l.provider}</div>
+                        <div className="list-card-subtitle">{l.desc}</div>
+                      </div>
+                      <button className="btn-solid" onClick={() => handleApply(l.provider, 'Loan')}>
+                        Apply
+                      </button>
+                    </div>
+
+                    <div className="list-card-stats" style={{ marginTop: 12 }}>
+                      <div className="stat-group"><div className="stat-label">Interest Rate</div><div className="stat-val">{l.interest_rate}% p.a.</div></div>
+                      <div className="stat-group"><div className="stat-label">Max Amount</div><div className="stat-val">₹{l.amount.toLocaleString()}</div></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    const ALL_SCHOLARSHIPS = [
+      { name: "Junior Merit", amount: 3000, reqMarks: 60, desc: "Plus 2 | Up to ₹600,000 income" },
+      { name: "UG Merit", amount: 10000, reqMarks: 55, desc: "UG Courses | Up to ₹800,000 income" },
+      { name: "PG Merit", amount: 15000, reqMarks: 55, desc: "PG Courses | Up to ₹800,000 income" },
+      { name: "Pathani Samanta Mathematics Talent", amount: 5000, reqMarks: 0, desc: "Mathematics Talent Special" },
+      { name: "Vyasakabi Fakirmohan Bhasabruti", amount: 20000, reqMarks: 60, desc: "Odia Language Special" },
+      { name: "Laptop DBT", amount: 30000, reqMarks: 0, desc: "UG Device Grant" },
+      { name: "Technical & Professional", amount: 20000, reqMarks: 55, desc: "Engineering/Medical/MBA" },
+      { name: "Banishree Scholarship", amount: 10000, reqMarks: 0, desc: "Disability Scheme" },
+      { name: "Sudakshya for Girls Child", amount: 10000, reqMarks: 0, desc: "Female ITI/Diploma Students" },
+      { name: "Green Passage", amount: 10000, reqMarks: 0, desc: "Orphan Scheme" },
+      { name: "Nirman Shramik", amount: 10000, reqMarks: 0, desc: "Construction Labour Child" },
+      { name: "Post Matric Scholarship", amount: 12000, reqMarks: 0, desc: "SC/ST/OBC - Post Matric" },
+      { name: "Pre Matric Scholarship", amount: 5000, reqMarks: 0, desc: "SC/ST Class 6-10" },
+      { name: "Maharashtra Post-Matric OBC Scholarship", amount: 15000, reqMarks: 0, desc: "OBC students post-matric limit 8L" },
+      { name: "Maharashtra Girls Merit Scholarship", amount: 20000, reqMarks: 70, desc: "Female Merit Grant" },
+      { name: "Karnataka Post-Matric SC Scholarship", amount: 20000, reqMarks: 0, desc: "SC students in Karnataka" },
+      { name: "Karnataka Post-Matric ST Scholarship", amount: 20000, reqMarks: 0, desc: "ST students in Karnataka" },
+      { name: "Swami Vivekananda Merit Scholarship", amount: 12000, reqMarks: 60, desc: "West Bengal Merit Grant" },
+      { name: "Kanyashree Scholarship", amount: 25000, reqMarks: 0, desc: "WB Female School students" },
+      { name: "UP Post-Matric Scholarship", amount: 12000, reqMarks: 0, desc: "UP SC/ST/OBC/GEN up to 2L income" },
+      { name: "UP Pre-Matric Scholarship", amount: 5000, reqMarks: 0, desc: "UP Class 9-10 up to 1L income" },
+      { name: "Telangana Post-Matric SC Scholarship", amount: 15000, reqMarks: 0, desc: "TS SC Students" },
+      { name: "Telangana Minority Scholarship", amount: 12000, reqMarks: 0, desc: "TS Minority Support" },
+      { name: "Jagananna Vidya Deevena", amount: 20000, reqMarks: 0, desc: "AP UG/PG Support" },
+      { name: "NTR Vidyonnathi Scheme", amount: 30000, reqMarks: 60, desc: "AP UG Merit Grant" },
+      { name: "Mukhyamantri Saksham Merit Scholarship", amount: 12000, reqMarks: 60, desc: "Haryana School Merit Grant" },
+      { name: "Chief Minister Scholarship Meghalaya", amount: 6000, reqMarks: 0, desc: "Meghalaya general grant" }
+    ];
+
+    function PageScholarships({ result, handleApply }) {
+      if (!result) return <div style={{ padding: 40, textAlign: 'center' }}>Please submit the form first.</div>;
+      const userMarks = result.student.marks;
+
+      return (
+        <div className="fade-in">
+          <h2 className="page-title">Available Scholarships</h2>
+          <p className="page-subtitle">All active scholarship programs.</p>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            {ALL_SCHOLARSHIPS.map((s, i) => {
+              const eligible = userMarks >= s.reqMarks;
+              return (
+                <div key={i} className="list-card">
+                  <div className="list-card-header" style={{ marginBottom: 0 }}>
+                    <div className="list-card-icon" style={{ opacity: eligible ? 1 : 0.5 }}>🎖️</div>
+                    <div className="list-card-content">
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                        <div>
+                          <div className="list-card-title" style={{ opacity: eligible ? 1 : 0.5 }}>{s.name}</div>
+                          <div className="list-card-match">{s.desc} • Required Marks: {s.reqMarks}%</div>
+                        </div>
+                        <button
+                          className="btn-solid"
+                          onClick={() => handleApply(s.name, 'Scholarship')}
+                          disabled={!eligible}
+                          style={{ opacity: eligible ? 1 : 0.4, cursor: eligible ? 'pointer' : 'not-allowed' }}
+                        >
+                          {eligible ? 'Apply' : 'Not Eligible'}
+                        </button>
+                      </div>
+
+                      <div className="list-card-stats" style={{ marginTop: 12, opacity: eligible ? 1 : 0.5 }}>
+                        <div className="stat-group"><div className="stat-label">Amount</div><div className="stat-val">₹{s.amount.toLocaleString()}</div></div>
+                        <div className="stat-group"><div className="stat-label">Eligibility</div><div className="stat-val">Marks &gt;= {s.reqMarks}%</div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      );
+    }
+
+    function PageApplications({ result, userApplications }) {
+      if (!result) return <div style={{ padding: 40, textAlign: 'center' }}>Please submit the form first.</div>;
+
+      return (
+        <div className="fade-in">
+          <h2 className="page-title">Application Tracking</h2>
+          <p className="page-subtitle">Monitor your scholarship and loan applications and document status.</p>
+
+          {userApplications.length === 0 ? (
+            <div style={{ padding: 40, textAlign: 'center', color: 'var(--text-muted)' }}>You have not applied for any funding yet.</div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+              {userApplications.map(app => (
+                <div key={app.id} className="list-card" style={{ paddingBottom: 8 }}>
+                  <div className="list-card-badge status-approved">Under Review</div>
+                  <div className="list-card-header">
+                    <div className="list-card-icon accent-green">📑</div>
+                    <div>
+                      <div className="list-card-title">{app.providerName}</div>
+                      <div className="list-card-subtitle">{app.type} • Applied {new Date(app.applied_on).toLocaleDateString()}</div>
+                    </div>
+                  </div>
+
+                  <div className="progress-track" style={{ marginTop: 16 }}>
+                    <div className="progress-line"><div className="progress-line-fill" style={{ width: '50%' }}></div></div>
+
+                    <div className="progress-step">
+                      <div className="step-icon done">✓</div>
+                      <div className="step-label done">Applied</div>
+                    </div>
+                    <div className="progress-step">
+                      <div className="step-icon done">✓</div>
+                      <div className="step-label done">Under Review</div>
+                    </div>
+                    <div className="progress-step">
+                      <div className="step-icon"></div>
+                      <div className="step-label">Approved</div>
+                    </div>
+                    <div className="progress-step">
+                      <div className="step-icon"></div>
+                      <div className="step-label">Disbursed</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    function PageAdminDashboard() {
+      const [applications, setApplications] = useState([]);
+      const [complaints, setComplaints] = useState([]);
+      const [filter, setFilter] = useState('');
+      const [auditLog, setAuditLog] = useState(null);
+
+      const fetchAdminData = async () => {
+        try {
+          const resApps = await fetch(`${API_BASE}/admin/applications${filter ? '?status=' + filter : ''}`);
+          const dataApps = await resApps.json();
+          setApplications(dataApps.applications || []);
+
+          const resComps = await fetch(`${API_BASE}/admin/complaints`);
+          const dataComps = await resComps.json();
+          setComplaints(dataComps.complaints || []);
+        } catch (e) {
+          console.error(e);
+        }
+      };
+
+      useEffect(() => {
+        fetchAdminData();
+      }, [filter]);
+
+      const handleAction = async (appId, action) => {
+        let reason = '';
+        if (action === 'Reject') {
+          reason = prompt('Reason for rejection is mandatory:');
+          if (!reason) return;
+        } else {
+          reason = prompt('Optional approval notes:') || '';
+        }
+
+        try {
+          const res = await fetch(`${API_BASE}/admin/action`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ application_id: appId, action, reason, admin_id: 'Admin User' })
+          });
+          if (res.ok) {
+            alert(`Application ${action}ed successfully.`);
+            fetchAdminData();
+          } else {
+            const data = await res.json();
+            alert(data.error || 'Failed');
+          }
+        } catch (e) {
+          alert('Network err');
+        }
+      };
+
+      const viewAudit = async (appId) => {
+        try {
+          const res = await fetch(`${API_BASE}/admin/audit/${appId}`);
+          const data = await res.json();
+          setAuditLog(data.audits || []);
+        } catch (e) {
+          console.error(e);
+        }
+      };
+
+      const handleComplaintReply = async (compId) => {
+        const reply = prompt("Enter your reply for this complaint:");
+        if (!reply) return;
+
+        try {
+          const res = await fetch(`${API_BASE}/admin/reply-complaint`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ complaint_id: compId, reply })
+          });
+          if (res.ok) {
+            alert('Reply sent successfully.');
+            fetchAdminData();
+          } else {
+            alert('Failed to send reply.');
+          }
+        } catch (e) {
+          alert('Network error.');
+        }
+      };
+
+      return (
+        <div className="fade-in">
+          <h2 className="page-title">Admin Panel</h2>
+          <p className="page-subtitle">Manage Applications & Analytics</p>
+
+          <div className="metrics-row" style={{ marginBottom: '20px' }}>
+            <select value={filter} onChange={e => setFilter(e.target.value)} style={{ padding: '8px', borderRadius: '4px' }}>
+              <option value="">All Statuses</option>
+              <option value="Approved">Approved</option>
+              <option value="Under Review">Under Review</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+          </div>
+
+          <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
+            <div className="card" style={{ flex: 2, minWidth: '400px' }}>
+              <h3 style={{ marginBottom: 16 }}>Applications Queue</h3>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
+                <thead>
+                  <tr style={{ textAlign: 'left', borderBottom: '1px solid var(--border)' }}>
+                    <th style={{ padding: '12px 8px' }}>Student</th>
+                    <th style={{ padding: '12px 8px' }}>Score</th>
+                    <th style={{ padding: '12px 8px' }}>Status</th>
+                    <th style={{ padding: '12px 8px' }}>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {applications.map(app => (
+                    <tr key={app.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                      <td style={{ padding: '12px 8px' }}>
+                        <strong>{app.student?.name}</strong><br />
+                        <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>₹{app.student?.course_fee} • {app.student?.course_level}</span>
+                      </td>
+                      <td style={{ padding: '12px 8px' }}>
+                        <div style={{ color: app.decision_zone === 'AUTO_APPROVED' ? 'var(--success-dark)' : app.decision_zone === 'MANUAL_REVIEW' ? 'var(--warning)' : '#ef4444', fontWeight: 600 }}>
+                          {app.eligibility_score}
+                        </div>
+                      </td>
+                      <td style={{ padding: '12px 8px' }}>
+                        <span style={{ background: app.disbursal_status === 'Approved' ? 'var(--success-light)' : app.disbursal_status === 'Rejected' ? '#fee2e2' : 'var(--warning-light)', color: app.disbursal_status === 'Approved' ? 'var(--success-dark)' : app.disbursal_status === 'Rejected' ? '#991b1b' : 'var(--warning)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600 }}>
+                          {app.disbursal_status}
+                        </span>
+                      </td>
+                      <td style={{ padding: '12px 8px', display: 'flex', gap: '8px' }}>
+                        <button className="btn-solid" style={{ background: 'var(--success-dark)', padding: '4px 12px' }} onClick={() => handleAction(app.id, 'Approve')}>Approve</button>
+                        <button className="btn-solid" style={{ background: '#dc2626', padding: '4px 12px' }} onClick={() => handleAction(app.id, 'Reject')}>Reject</button>
+                        <button className="btn-outline" style={{ padding: '4px 12px' }} onClick={() => viewAudit(app.id)}>Logs</button>
+                      </td>
+                    </tr>
+                  ))}
+                  {applications.length === 0 && <tr><td colSpan="4" style={{ padding: '24px', textAlign: 'center' }}>No applications found.</td></tr>}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="card" style={{ flex: 1, minWidth: '300px' }}>
+              <h3 style={{ marginBottom: 16 }}>Complaints Triage</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {complaints.map(comp => (
+                  <div key={comp.id} style={{ padding: '12px', borderLeft: comp.status === 'Pending' ? '4px solid #f59e0b' : '4px solid var(--success-dark)', background: '#f8fafc', borderRadius: '4px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+                      <strong style={{ fontSize: '0.85rem', color: 'var(--text-main)' }}>{comp.student_name} ({comp.email})</strong>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{new Date(comp.timestamp * 1000).toLocaleDateString()}</span>
+                    </div>
+                    <div style={{ fontSize: '0.85rem', color: 'var(--text-main)', marginBottom: '8px' }}>{comp.text}</div>
+
+                    {comp.status === 'Pending' ? (
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--warning)', fontWeight: 600 }}>Pending Resolution</div>
+                        <button className="btn-solid" style={{ padding: '4px 10px', fontSize: '0.75rem' }} onClick={() => handleComplaintReply(comp.id)}>Reply</button>
+                      </div>
+                    ) : (
+                      <div style={{ marginTop: '8px', padding: '8px', background: 'var(--success-light)', borderRadius: '4px' }}>
+                        <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--success-dark)' }}>Replied:</div>
+                        <div style={{ fontSize: '0.8rem', color: 'var(--text-main)' }}>{comp.reply}</div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+                {complaints.length === 0 && <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>No complaints found.</div>}
+              </div>
+            </div>
+          </div>
+
+          {auditLog && (
+            <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100 }}>
+              <div style={{ background: 'var(--bg-white)', padding: '32px', borderRadius: '12px', minWidth: '500px', maxHeight: '80vh', overflowY: 'auto' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
+                  <h3 style={{ margin: 0 }}>Application Audit Logs</h3>
+                  <button onClick={() => setAuditLog(null)} style={{ background: 'transparent', border: 'none', fontSize: '1.2rem', cursor: 'pointer' }}>×</button>
+                </div>
+                {auditLog.map(l => (
+                  <div key={l.id} style={{ padding: '12px', border: '1px solid var(--border)', borderRadius: '8px', marginBottom: '12px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                      <strong>{l.action}</strong>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{new Date(l.timestamp * 1000).toLocaleString()}</span>
+                    </div>
+                    <div style={{ fontSize: '0.85rem' }}>By: {l.performed_by}</div>
+                    {l.reason && <div style={{ fontSize: '0.85rem', marginTop: '4px' }}>Reason: {l.reason}</div>}
+                  </div>
+                ))}
+                {auditLog.length === 0 && <div>No admin actions logged yet.</div>}
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    function Chatbot({ onClose, context, user, form }) {
+      const [messages, setMessages] = useState([{ role: 'ai', text: `Hi ${user?.name || 'Student'}! I am your local AI Counsellor. How can I help you pick the best funds or fill out your form today?` }]);
+      const [input, setInput] = useState('');
+      const [lang, setLang] = useState('en');
+
+      const sendMessage = async () => {
+        if (!input.trim()) return;
+        const newMsgs = [...messages, { role: 'user', text: input }];
+        setMessages(newMsgs);
+        setInput('');
+
+        try {
+          const res = await fetch(`${API_BASE}/chat`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: input, context: { ...context, user, form }, lang })
+          });
+          const data = await res.json();
+          setMessages([...newMsgs, { role: 'ai', text: data.response }]);
+        } catch (e) {
+          setMessages([...newMsgs, { role: 'ai', text: 'Error connecting to AI service.' }]);
+        }
+      };
+
+      return (
+        <div style={{ position: 'fixed', bottom: 20, right: 20, width: 350, height: 500, background: 'var(--bg-white)', borderRadius: 16, boxShadow: '0 10px 25px rgba(0,0,0,0.1)', display: 'flex', flexDirection: 'column', overflow: 'hidden', border: '1px solid var(--border)', zIndex: 1000 }}>
+          <div style={{ background: 'var(--primary)', color: 'white', padding: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ fontWeight: 600 }}>💬 EduFund AI Counsellor</div>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <select value={lang} onChange={e => setLang(e.target.value)} style={{ background: 'transparent', color: 'white', border: '1px solid rgba(255,255,255,0.3)', borderRadius: 4, outline: 'none' }}>
+                <option value="en" style={{ color: 'black' }}>EN</option>
+                <option value="hi" style={{ color: 'black' }}>HI</option>
+                <option value="or" style={{ color: 'black' }}>OR</option>
+              </select>
+              <button onClick={onClose} style={{ background: 'transparent', border: 'none', color: 'white', cursor: 'pointer', fontSize: '1.2rem', lineHeight: 1 }}>×</button>
+            </div>
+          </div>
+          <div style={{ flex: 1, padding: '16px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '12px', background: 'var(--bg-app)' }}>
+            {messages.map((m, i) => (
+              <div key={i} style={{ alignSelf: m.role === 'user' ? 'flex-end' : 'flex-start', background: m.role === 'user' ? 'var(--primary)' : 'var(--bg-white)', color: m.role === 'user' ? '#fff' : 'var(--text-main)', padding: '10px 14px', borderRadius: '12px', maxWidth: '85%', border: m.role === 'user' ? 'none' : '1px solid var(--border)', fontSize: '0.9rem', lineHeight: 1.4 }}>
+                {m.text}
+              </div>
+            ))}
+          </div>
+          <div style={{ padding: '12px', borderTop: '1px solid var(--border)', display: 'flex', gap: 8, background: 'var(--bg-white)' }}>
+            <input
+              type="text"
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && sendMessage()}
+              placeholder="Ask me anything..."
+              style={{ flex: 1, padding: '8px 12px', border: '1px solid var(--border)', borderRadius: '20px', outline: 'none' }}
+            />
+            <button onClick={sendMessage} style={{ background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '50%', width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+              ➤
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    function App() {
+      const [activeTab, setActiveTab] = useState("Home");
+      const [darkMode, setDarkMode] = useState(false);
+      const [chatOpen, setChatOpen] = useState(false);
+
+      useEffect(() => {
+        if (darkMode) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+          document.documentElement.removeAttribute('data-theme');
+        }
+      }, [darkMode]);
+
+      const [userApplications, setUserApplications] = useState(() => {
+        const stored = localStorage.getItem('userApplications');
+        return stored ? JSON.parse(stored) : [];
+      });
+
+      useEffect(() => {
+        localStorage.setItem('userApplications', JSON.stringify(userApplications));
+      }, [userApplications]);
+
+      const handleApplyWrapper = (providerName, type) => {
+        const storedDocs = localStorage.getItem('profileDocs');
+        const docs = storedDocs ? JSON.parse(storedDocs) : [];
+        const requiredDocs = docs.filter(d => !d.optional);
+        const completedRequired = requiredDocs.filter(d => d.status === 'Verified').length;
+
+        if (completedRequired < requiredDocs.length) {
+          alert('Please complete your profile and upload required documents');
+          return;
+        }
+
+        const newApp = { id: Date.now(), providerName, type, applied_on: new Date().toISOString() };
+        setUserApplications(prev => [newApp, ...prev]);
+        setActiveTab("Applications");
+      };
+
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      const [form, setForm] = useState({ name: user.name || "Student", income: "", marks: "", category: "General", course_fee: "", course_level: "Class 6–10", state: "Maharashtra", special_case: "none", cibil_score: "", college_tier: "Unknown", collateral_amount: "" });
+      const [loading, setLoading] = useState(false);
+      const [error, setError] = useState("");
+      const [result, setResult] = useState(null);
+      const [activeAgentIdx, setActiveAgentIdx] = useState(-1);
+
+      const handleSubmit = async () => {
+        setError("");
+        if (!form.income || !form.marks || !form.course_fee) {
+          setError("Please fill in all fields."); return;
+        }
+        setLoading(true);
+        setActiveAgentIdx(0);
+
+        const timer = setInterval(() => {
+          setActiveAgentIdx(prev => (prev < AGENTS.length - 1 ? prev + 1 : prev));
+        }, 400);
+
+        try {
+          const res = await fetch(`${API_BASE}/process-student`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name: form.name,
+              income: parseFloat(form.income),
+              marks: parseFloat(form.marks),
+              category: form.category,
+              course_fee: parseFloat(form.course_fee),
+              course_level: form.course_level,
+              state: form.state,
+              special_case: form.special_case,
+              cibil_score: parseInt(form.cibil_score || "0"),
+              college_tier: form.college_tier,
+              collateral_amount: parseFloat(form.collateral_amount || "0")
+            })
+          });
+
+          clearInterval(timer);
+          setActiveAgentIdx(AGENTS.length);
+
+          if (!res.ok) {
+            const err = await res.json();
+            setError(err.error || "Server error"); setLoading(false); return;
+          }
+
+          const data = await res.json();
+          setResult(data);
+          // Auto switch to Dashboard after delay or keep Home so they can click Dashboard
+          setTimeout(() => setActiveTab("Dashboard"), 800);
+        } catch (e) {
+          clearInterval(timer);
+          setError("Cannot connect to backend. Please start the Flask server on port 5000.");
+        }
+        setLoading(false);
+      };
+
+      return (
+        <div className="app-layout">
+          <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} darkMode={darkMode} setDarkMode={setDarkMode} setChatOpen={setChatOpen} />
+          <main className="main-content">
+            {activeTab === "Home" && <PageHome form={form} setForm={setForm} handleSubmit={handleSubmit} loading={loading} error={error} activeAgentIdx={activeAgentIdx} />}
+            {activeTab === "Dashboard" && <PageDashboard result={result} handleApply={handleApplyWrapper} />}
+            {activeTab === "Scholarships" && <PageScholarships result={result} handleApply={handleApplyWrapper} />}
+            {activeTab === "Loans" && <PageLoans result={result} handleApply={handleApplyWrapper} />}
+            {activeTab === "Applications" && <PageApplications result={result} userApplications={userApplications} />}
+            {activeTab === "Profile & Documents" && <PageStudentProfile result={result} />}
+            {activeTab === "Admin Panel" && <PageAdminDashboard />}
+          </main>
+          {chatOpen && <Chatbot onClose={() => setChatOpen(false)} context={result} user={JSON.parse(localStorage.getItem('user') || '{}')} form={form} />}
+        </div>
+      );
+    }
+
+    function PageStudentProfile({ result }) {
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      const [docs, setDocs] = useState(() => {
+        const stored = localStorage.getItem('profileDocs');
+        if (stored) return JSON.parse(stored);
+        return [
+          { id: 'aadhaar', name: 'Aadhaar Card', optional: false, status: 'Missing' },
+          { id: 'income', name: 'Income Certificate', optional: false, status: 'Missing' },
+          { id: 'marksheet', name: 'Marksheet', optional: false, status: 'Missing' },
+          { id: 'bank', name: 'Bank Account Details (Account Number + IFSC)', optional: false, status: 'Missing' },
+          { id: 'pan', name: 'PAN Card', optional: false, status: 'Missing' },
+          { id: 'caste', name: 'Caste Certificate (only if applicable)', optional: true, status: 'Missing' }
+        ];
+      });
+
+      const [processing, setProcessing] = useState(null);
+      const [myComplaints, setMyComplaints] = useState([]);
+      const [newComplaint, setNewComplaint] = useState("");
+
+      useEffect(() => {
+        const fetchComps = async () => {
+          if (!user.email) return;
+          try {
+            const res = await fetch(`${API_BASE}/student/complaints?email=${encodeURIComponent(user.email)}`);
+            const data = await res.json();
+            setMyComplaints(data.complaints || []);
+          } catch (e) { }
+        };
+        fetchComps();
+      }, [user.email]);
+
+      useEffect(() => {
+        localStorage.setItem('profileDocs', JSON.stringify(docs));
+      }, [docs]);
+
+      const handleUpload = async (id) => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.pdf,.png,.jpg,.jpeg';
+        input.onchange = async (e) => {
+          if (e.target.files && e.target.files[0]) {
+            setProcessing(id);
+            const formData = new FormData();
+            formData.append('file', e.target.files[0]);
+            formData.append('student_name', user.name || '');
+            formData.append('doc_type', id);
+
+            try {
+              const res = await fetch(`${API_BASE}/upload-document`, {
+                method: 'POST',
+                body: formData
+              });
+              const data = await res.json();
+              if (res.ok) {
+                if (data.status === 'Verified') {
+                  setDocs(prev => prev.map(d => d.id === id ? { ...d, status: 'Verified' } : d));
+                } else {
+                  setDocs(prev => prev.map(d => d.id === id ? { ...d, status: 'Rejected' } : d));
+                  alert(`Verification Failed: ${data.reason}`);
+                }
+              } else {
+                setDocs(prev => prev.map(d => d.id === id ? { ...d, status: 'Missing' } : d));
+                alert(data.error || "Upload failed");
+              }
+            } catch (err) {
+              alert("Network error capturing document.");
+            }
+            setProcessing(null);
+          }
+        };
+        input.click();
+      };
+
+      const syncDigilocker = async () => {
+        setProcessing('digilocker');
+        try {
+          const res = await fetch(`${API_BASE}/digilocker-sync`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ student_name: user.name || 'Student' })
+          });
+          const data = await res.json();
+          if (res.ok) {
+            setDocs(prev => prev.map(d => data.imported_docs.includes(d.id) ? { ...d, status: 'Verified' } : d));
+            alert(data.message);
+          } else {
+            alert(data.error || "DigiLocker sync failed");
+          }
+        } catch (err) {
+          alert("Network error.");
+        }
+        setProcessing(null);
+      };
+
+      const handleDelete = (id) => {
+        setDocs(prev => prev.map(d => d.id === id ? { ...d, status: 'Missing' } : d));
+      };
+
+      const requiredDocs = docs.filter(d => !d.optional);
+      const completedRequired = requiredDocs.filter(d => d.status === 'Verified').length;
+      const progress = Math.round((completedRequired / requiredDocs.length) * 100);
+
+      const getStatusBadge = (status) => {
+        switch (status) {
+          case 'Verified': return <span style={{ background: 'var(--success-light)', color: 'var(--success-dark)', padding: '4px 8px', borderRadius: 12, fontSize: '0.75rem', fontWeight: 600 }}>✓ Verified</span>;
+          case 'Pending': return <span style={{ background: 'var(--warning-light)', color: 'var(--warning)', padding: '4px 8px', borderRadius: 12, fontSize: '0.75rem', fontWeight: 600 }}>⏳ Pending</span>;
+          case 'Rejected': return <span style={{ background: '#fee2e2', color: '#991b1b', padding: '4px 8px', borderRadius: 12, fontSize: '0.75rem', fontWeight: 600 }}>✕ Rejected</span>;
+          default: return <span style={{ background: '#f1f5f9', color: '#64748b', padding: '4px 8px', borderRadius: 12, fontSize: '0.75rem', fontWeight: 600 }}>• Missing</span>;
+        }
+      };
+
+      const submitComplaint = async () => {
+        if (!newComplaint.trim()) return;
+        try {
+          const res = await fetch(`${API_BASE}/submit-complaint`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: user.email, student_name: user.name, text: newComplaint })
+          });
+          if (res.ok) {
+            setNewComplaint("");
+            const fres = await fetch(`${API_BASE}/student/complaints?email=${encodeURIComponent(user.email)}`);
+            const fdata = await fres.json();
+            setMyComplaints(fdata.complaints || []);
+            alert("Complaint submitted successfully to the admin team.");
+          } else {
+            alert("Failed to submit complaint.");
+          }
+        } catch (e) {
+          alert("Network error while submitting complaint.");
+        }
+      };
+
+      return (
+        <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+          <div className="card" style={{ padding: 32, display: 'flex', flexDirection: 'column', gap: 20 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <div>
+                <h2 style={{ margin: '0 0 8px 0', fontSize: '1.8rem', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <span style={{ fontSize: '2rem' }}>🎓</span> {user.name || 'Student'}
+                </h2>
+                <p style={{ margin: 0, color: 'var(--text-muted)' }}>{user.email || 'student@example.com'} • Role: {user.role || 'Student'}</p>
+              </div>
+              {result && (
+                <div style={{ textAlign: 'right' }}>
+                  <div style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--primary)', lineHeight: 1 }}>{result.eligibility_score}</div>
+                  <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: 4 }}>Eligibility Score</div>
+                </div>
+              )}
+            </div>
+
+            {result ? (
+              <div style={{ display: 'flex', gap: 24, padding: '16px 20px', background: 'var(--bg-app)', borderRadius: 12, border: '1px solid var(--border)', flexWrap: 'wrap' }}>
+                <div style={{ flex: 1, minWidth: 120 }}>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: 4 }}>Status</div>
+                  <span style={{ padding: '4px 10px', borderRadius: 20, fontSize: '0.8rem', fontWeight: 600, background: result.disbursal_status === 'Approved' ? 'var(--success-light)' : 'var(--warning-light)', color: result.disbursal_status === 'Approved' ? 'var(--success-dark)' : 'var(--warning)' }}>
+                    {result.disbursal_status}
+                  </span>
+                </div>
+                <div style={{ width: 1, background: 'var(--border)' }}></div>
+                <div style={{ flex: 1, minWidth: 100 }}>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: 4 }}>Marks</div>
+                  <div style={{ fontWeight: 600, color: 'var(--text-main)' }}>{result.student.marks}%</div>
+                </div>
+                <div style={{ width: 1, background: 'var(--border)' }}></div>
+                <div style={{ flex: 1, minWidth: 100 }}>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: 4 }}>Family Income</div>
+                  <div style={{ fontWeight: 600, color: 'var(--text-main)' }}>₹{result.student.income.toLocaleString()}</div>
+                </div>
+                <div style={{ width: 1, background: 'var(--border)' }}></div>
+                <div style={{ flex: 1, minWidth: 100 }}>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: 4 }}>Category</div>
+                  <div style={{ fontWeight: 600, color: 'var(--text-main)' }}>{result.student.category}</div>
+                </div>
+              </div>
+            ) : (
+              <div style={{ padding: '24px', background: 'var(--bg-app)', borderRadius: 12, border: '1px dashed #d1d5db', textAlign: 'center' }}>
+                <div style={{ fontSize: '1.05rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: 8 }}>Application Data Pending</div>
+                <div style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>You haven't submitted your initial application form yet. Head to the <a href="#" onClick={(e) => { e.preventDefault(); document.querySelector('.nav-item').click(); }} style={{ color: 'var(--primary)' }}>Home</a> tab to get your eligibility score computed!</div>
+              </div>
+            )}
+          </div>
+
+          <div className="card" style={{ padding: 24 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+              <h3 style={{ margin: 0, fontSize: '1.1rem' }}>Profile Completion</h3>
+              <div style={{ fontWeight: 700, color: progress === 100 ? 'var(--success-dark)' : 'var(--primary)', fontSize: '1.1rem' }}>{completedRequired}/{requiredDocs.length} Documents Completed</div>
+            </div>
+            <div style={{ height: 12, background: 'var(--border)', borderRadius: 6, overflow: 'hidden' }}>
+              <div style={{ height: '100%', width: `${progress}%`, background: progress === 100 ? 'var(--success)' : 'var(--primary)', transition: 'width 0.5s ease-in-out' }}></div>
+            </div>
+            {progress < 100 && (
+              <div style={{ marginTop: 16, padding: '14px 16px', background: 'var(--primary-light)', color: 'var(--primary)', borderRadius: 8, fontWeight: 600, fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: 10 }}>
+                <span style={{ fontSize: '1.2rem' }}>✨</span> Complete your Profile to Unlock automated Scholarships & Loans
+              </div>
+            )}
+          </div>
+
+          <div className="card" style={{ padding: 32 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24, flexWrap: 'wrap', gap: 16 }}>
+              <div>
+                <h3 style={{ margin: '0 0 8px 0', fontSize: '1.3rem' }}>Required Documents Checklist</h3>
+                <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.9rem' }}>Securely uploaded and cross-verified by EduFund AI.</p>
+              </div>
+              <button className="btn-outline" onClick={syncDigilocker} disabled={processing === 'digilocker'} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 18px', borderRadius: 20 }}>
+                <img src="\digilocker.jpeg" alt="DigiLocker" style={{ height: 14 }} />
+                {processing === 'digilocker' ? 'Syncing...' : 'Auto-fetch all documents via DigiLocker (simulated)'}
+              </button>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 20 }}>
+              {docs.map(doc => {
+                const isProcessing = processing === doc.id;
+                const isUploaded = doc.status === 'Verified' || doc.status === 'Rejected';
+
+                return (
+                  <div key={doc.id} style={{ padding: 20, borderRadius: 16, background: 'var(--bg-white)', border: doc.status === 'Verified' ? '1px solid var(--success-dark)' : '1px solid var(--border)', position: 'relative', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
+                      <div style={{ width: 44, height: 44, borderRadius: 12, background: doc.status === 'Verified' ? 'var(--success-light)' : 'var(--primary-light)', color: doc.status === 'Verified' ? 'var(--success-dark)' : 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.3rem' }}>
+                        {doc.status === 'Verified' ? '📄' : '📤'}
+                      </div>
+                      {isProcessing ? getStatusBadge('Pending') : getStatusBadge(doc.status)}
+                    </div>
+
+                    <h4 style={{ margin: '0 0 4px 0', fontSize: '1.05rem', color: 'var(--text-main)', fontWeight: 700 }}>{doc.name}</h4>
+                    <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                      {doc.optional ? 'Optional supplement' : 'Required for compliance'}
+                    </p>
+
+                    <div style={{ marginTop: 24, display: 'flex', gap: 8 }}>
+                      {isProcessing ? (
+                        <button className="btn-solid" disabled style={{ width: '100%', opacity: 0.7, background: 'var(--warning)', cursor: 'wait' }}>
+                          Verifying AI...
+                        </button>
+                      ) : isUploaded ? (
+                        <>
+                          <button className="btn-outline" onClick={() => handleUpload(doc.id)} style={{ flex: 1, padding: '8px 4px' }}>Replace</button>
+                          <button className="btn-outline" onClick={() => alert('View function simulated.')} style={{ flex: 1, padding: '8px 4px' }}>Preview</button>
+                          <button className="btn-outline" onClick={() => handleDelete(doc.id)} style={{ flex: 1, padding: '8px 4px', color: '#dc2626', borderColor: '#fca5a5' }}>🗑️</button>
+                        </>
+                      ) : (
+                        <button className="btn-solid" onClick={() => handleUpload(doc.id)} style={{ width: '100%' }}>
+                          Upload Now
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="card" style={{ padding: 32 }}>
+            <h3 style={{ margin: '0 0 16px 0', fontSize: '1.3rem' }}>Help & Support (Complaints)</h3>
+            <div style={{ display: 'flex', gap: '12px', marginBottom: '24px' }}>
+              <input
+                type="text"
+                value={newComplaint}
+                onChange={e => setNewComplaint(e.target.value)}
+                placeholder="Describe your issue or complaint here..."
+                style={{ flex: 1, padding: '12px', borderRadius: '8px', border: '1px solid var(--border)' }}
+                onKeyDown={e => e.key === 'Enter' && submitComplaint()}
+              />
+              <button className="btn-solid" onClick={submitComplaint}>Submit Complaint</button>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {myComplaints.length === 0 ? (
+                <div style={{ color: 'var(--text-muted)' }}>You have no past complaints.</div>
+              ) : (
+                myComplaints.map(comp => (
+                  <div key={comp.id} style={{ padding: '16px', background: 'var(--bg-app)', border: '1px solid var(--border)', borderRadius: '8px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                      <strong style={{ color: 'var(--text-main)' }}>You reported:</strong>
+                      <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{new Date(comp.timestamp * 1000).toLocaleString()}</span>
+                    </div>
+                    <div style={{ marginBottom: '12px', color: 'var(--text-muted)' }}>{comp.text}</div>
+
+                    {comp.reply ? (
+                      <div style={{ padding: '12px', background: 'var(--primary-light)', borderLeft: '4px solid var(--primary)', borderRadius: '4px' }}>
+                        <div style={{ fontWeight: 600, color: 'var(--primary-dark)', fontSize: '0.85rem', marginBottom: '4px' }}>Admin Reply:</div>
+                        <div style={{ fontSize: '0.9rem', color: 'var(--text-main)' }}>{comp.reply}</div>
+                      </div>
+                    ) : (
+                      <span style={{ fontSize: '0.8rem', padding: '4px 8px', background: 'var(--warning-light)', color: 'var(--warning)', borderRadius: '20px', fontWeight: 600 }}>Status: Pending</span>
+                    )}
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+
+</html>

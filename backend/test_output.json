@@ -1,0 +1,38 @@
+[
+  {
+    "amount": 50000.0,
+    "description": "Encouraging women and girl children to pursue technical and engineering disciplines.",
+    "id": "NSP007",
+    "name": "Pragati Scholarship Scheme For Girl Students (Technical Degree)"
+  },
+  {
+    "amount": 100000.0,
+    "description": "Covering tuition and hostel fees for students from J&K and Ladakh.",
+    "id": "NSP010",
+    "name": "Special Scholarship Scheme for Jammu Kashmir and Ladakh"
+  },
+  {
+    "amount": 50000.0,
+    "description": "Providing support to specially-abled students for higher technical courses.",
+    "id": "NSP011",
+    "name": "Saksham Scholarship Scheme for Specially Abled Students (Degree)"
+  },
+  {
+    "amount": 150000.0,
+    "description": "Full coverage for studying in top-class institutions for students with disabilities.",
+    "id": "NSP012",
+    "name": "Scholarships for Top Class Education for students with disabilities"
+  },
+  {
+    "amount": 3000,
+    "description": "Odisha Direct Benefit: Specifically tailored for Plus 2.",
+    "id": "OD_JUNIOR_001",
+    "name": "Junior Merit"
+  },
+  {
+    "amount": 30000,
+    "description": "Odisha Direct Benefit: Specifically tailored for Plus 2.",
+    "id": "OD_LAPTOP_001",
+    "name": "Laptop DBT"
+  }
+]

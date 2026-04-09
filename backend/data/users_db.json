@@ -1,0 +1,65 @@
+[
+    {
+        "id": "2026-04-07T16:42:15.955255",
+        "name": "MOHIT PRADHAN",
+        "email": "destinyspro102@gmail.com",
+        "password": "Mohit2005Arman",
+        "role": "Student"
+    },
+    {
+        "id": "2026-04-07T17:07:11.658508",
+        "name": "ADITYA SAHU",
+        "email": "adityasahu1501@gmail.com",
+        "password": "123456",
+        "role": "Student"
+    },
+    {
+        "id": "2026-04-07T19:35:52.650437",
+        "name": "sikha sharma ",
+        "email": "adityasahu@gmail.com",
+        "password": "159753",
+        "role": "Student"
+    },
+    {
+        "id": "2026-04-08T01:36:43.530781",
+        "name": "Student",
+        "email": "student@example.com",
+        "password": "password",
+        "role": "Student"
+    },
+    {
+        "id": "2026-04-08T01:45:16.657375",
+        "name": "MANISHA RIJAL ",
+        "email": "manisha@gmail.com",
+        "password": "1234",
+        "role": "Student"
+    },
+    {
+        "id": "2026-04-08T02:03:25.060448",
+        "name": "MOHIT PRADHAN",
+        "email": "mohitpradhan102@gmail.com",
+        "password": "1234",
+        "role": "Student"
+    },
+    {
+        "id": "2026-04-08T11:56:02.663445",
+        "name": "Biswajit Das",
+        "email": "dasb82529@gmail.com",
+        "password": "1234",
+        "role": "Student"
+    },
+    {
+        "id": "admin-id",
+        "name": "Admin User",
+        "email": "admin@vidyasaarthi.ai",
+        "password": "admin",
+        "role": "Admin"
+    },
+    {
+        "id": "2026-04-08T12:33:57.270847",
+        "name": "Aditya Kumar Sahu",
+        "email": "aks.akadon1507@gmail.com",
+        "password": "1234",
+        "role": "Student"
+    }
+]

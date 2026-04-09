@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VidyaSaarthi AI — Authentication</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --primary: #2563eb;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      color: var(--text-main);
+      background: #ffffff;
+      overflow-x: hidden;
+    }
+
+    .split-container {
+      display: flex;
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    /* Left Pane */
+    .left-pane {
+      flex: 1;
+      background-color: #020617;
+      color: white;
+      padding: 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slideshow-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      animation: crossfade 15s infinite;
+    }
+
+    .slide:nth-child(1) {
+      background-image: url('assets/slide1.png');
+      animation-delay: 0s;
+    }
+
+    .slide:nth-child(2) {
+      background-image: url('assets/slide2.png');
+      animation-delay: 5s;
+    }
+
+    .slide:nth-child(3) {
+      background-image: url('assets/slide3.png');
+      animation-delay: 10s;
+    }
+
+    @keyframes crossfade {
+      0% {
+        opacity: 0;
+        transform: scale(1.05);
+      }
+
+      10% {
+        opacity: 1;
+        transform: scale(1.03);
+      }
+
+      33% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      43% {
+        opacity: 0;
+        transform: scale(0.98);
+      }
+
+      100% {
+        opacity: 0;
+      }
+    }
+
+    .left-pane::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(88, 28, 135, 0.8) 0%, rgba(3, 105, 161, 0.8) 100%);
+      z-index: 1;
+    }
+
+    .left-pane>*:not(.slideshow-bg) {
+      position: relative;
+      z-index: 2;
+    }
+
+    .brand-top {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      animation: fadeDown 0.8s ease-out forwards;
+      opacity: 0;
+    }
+
+    .left-content {
+      max-width: 500px;
+      animation: slideInLeft 1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+      opacity: 0;
+      transform: translateX(-40px);
+    }
+
+    .logo-box {
+      width: 64px;
+      height: 64px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      font-weight: 800;
+      margin-bottom: 32px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .logo-box:hover {
+      transform: scale(1.05) rotate(5deg);
+    }
+
+    .left-title {
+      font-size: 3.5rem;
+      font-weight: 800;
+      line-height: 1.1;
+      margin: 0 0 24px 0;
+      letter-spacing: -1px;
+    }
+
+    .left-desc {
+      font-size: 1.25rem;
+      line-height: 1.6;
+      opacity: 0.9;
+      font-weight: 400;
+      margin: 0;
+    }
+
+    .left-footer {
+      font-size: 1rem;
+      animation: fadeUp 0.8s ease-out 0.6s forwards;
+      opacity: 0;
+    }
+
+    .left-footer strong {
+      font-weight: 700;
+      font-size: 1.1rem;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .left-footer span {
+      opacity: 0.8;
+    }
+
+    /* Right Pane */
+    .right-pane {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      background: #ffffff;
+      max-width: 650px;
+      width: 100%;
+    }
+
+    .form-container {
+      width: 100%;
+      max-width: 420px;
+      animation: fadeInRight 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .top-badge {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: var(--text-main);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 40px;
+    }
+
+    .form-title {
+      font-size: 2.75rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0 0 12px 0;
+      letter-spacing: -1px;
+    }
+
+    .form-subtitle {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      margin: 0 0 40px 0;
+    }
+
+    .role-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .role-btn {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .role-btn:hover {
+      border-color: #cbd5e1;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+    }
+
+    .role-btn:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    .role-btn.active {
+      border-color: #3b82f6;
+      background: #f8fafc;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.08);
+    }
+
+    .role-btn .role-sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      transition: color 0.2s ease;
+    }
+
+    .role-btn.active .role-sub {
+      color: #ec4899;
+      /* pinkish highlight for selected tab */
+    }
+
+    .role-btn .role-main {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 18px 20px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 1rem;
+      font-family: inherit;
+      color: var(--text-main);
+      transition: all 0.3s ease;
+      outline: none;
+    }
+
+    .input-group input:focus {
+      background: #ffffff;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    }
+
+    .input-group input::placeholder {
+      color: #94a3b8;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 18px;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 12px;
+      box-shadow: 0 6px 15px rgba(37, 99, 235, 0.2);
+    }
+
+    .submit-btn:hover {
+      background: #1d4ed8;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    .auth-switch {
+      text-align: center;
+      margin-top: 32px;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    .auth-switch span {
+      color: #2563eb;
+      font-weight: 600;
+      cursor: pointer;
+      margin-left: 6px;
+      transition: color 0.2s;
+    }
+
+    .auth-switch span:hover {
+      color: #1d4ed8;
+      text-decoration: underline;
+    }
+
+    /* Animations */
+    @keyframes fadeDown {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+    }
+
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+    }
+
+    @keyframes slideInLeft {
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      from {
+        opacity: 0;
+        transform: translateX(-40px);
+      }
+    }
+
+    @keyframes fadeInRight {
+      from {
+        opacity: 0;
+        transform: translateX(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @media (max-width: 900px) {
+      .split-container {
+        flex-direction: column;
+      }
+
+      .left-pane {
+        padding: 40px 20px;
+        min-height: 40vh;
+      }
+
+      .right-pane {
+        padding: 40px 20px;
+        max-width: 100%;
+      }
+
+      .left-title {
+        font-size: 2.5rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    function AuthPage() {
+      const [isLogin, setIsLogin] = useState(true);
+      const [role, setRole] = useState('Student');
+      const [formData, setFormData] = useState({
+        name: '', email: '', password: '', confirmPassword: ''
+      });
+
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (!isLogin && formData.password !== formData.confirmPassword) {
+          alert("Passwords do not match! Please check the Confirm Password field.");
+          return;
+        }
+
+        const btn = e.target.querySelector('button[type="submit"]');
+        const originalText = btn.innerText;
+        btn.innerHTML = `<span style="opacity: 0.8">Authenticating...</span>`;
+        btn.disabled = true;
+
+        try {
+          const endpoint = isLogin ? 'http://localhost:5000/login' : 'http://localhost:5000/signup';
+          const payload = isLogin ? {
+            email: formData.email,
+            password: formData.password,
+            role: role
+          } : {
+            name: formData.name,
+            email: formData.email,
+            password: formData.password,
+            role: 'Student'
+          };
+
+          // Try to fetch, if fetching fails, show error.
+          const res = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          const data = await res.json();
+
+          if (!res.ok) {
+            alert(data.error || "Authentication failed");
+            btn.innerText = originalText;
+            btn.disabled = false;
+            return;
+          }
+
+          if (isLogin) {
+            localStorage.setItem('token', data.token);
+            if (data.user) {
+              localStorage.setItem('user', JSON.stringify(data.user));
+            }
+            window.location.href = 'dashboard.html';
+          } else {
+            alert("Account created successfully! Please log in.");
+            setIsLogin(true);
+            setFormData({ name: '', email: formData.email, password: '', confirmPassword: '' });
+            btn.innerText = 'Login';
+            btn.disabled = false;
+          }
+
+        } catch (err) {
+          alert("Cannot connect to backend server.");
+          btn.innerText = originalText;
+          btn.disabled = false;
+        }
+      };
+
+      const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+      };
+
+      const toggleMode = () => {
+        setIsLogin(!isLogin);
+        setFormData({ name: '', email: '', password: '', confirmPassword: '' });
+      };
+
+      return (
+        <div className="split-container">
+
+          <div className="left-pane">
+            <div className="slideshow-bg">
+              <div className="slide"></div>
+              <div className="slide"></div>
+              <div className="slide"></div>
+            </div>
+            <div className="brand-top">VidyaSaarthi AI</div>
+
+            <div className="left-content">
+              <div className="logo-box">VS</div>
+              <h1 className="left-title">
+                {isLogin ? <span>Student funding,<br />simplified</span> : <span>Your future,<br />empowered</span>}
+              </h1>
+              <p className="left-desc">
+                {isLogin
+                  ? "Match scholarships, loans, and document verification in one guided flow."
+                  : "Join thousands of students achieving their educational dreams with AI-driven guidance."}
+              </p>
+            </div>
+
+            <div className="left-footer">
+              <strong>EduFund Student</strong>
+              <span>Scholarships and Loans</span>
+            </div>
+          </div>
+
+          <div className="right-pane">
+            <div className="form-container" key={isLogin ? 'login' : 'signup'}>
+              <div className="top-badge">VIDYASAARTHI</div>
+
+              <h2 className="form-title">
+                {isLogin ? `Hi ${role}` : 'Join EduFund'}
+              </h2>
+              <p className="form-subtitle">
+                {isLogin ? 'Welcome back to VidyaSaarthi AI' : 'Create an account to start your financial journey.'}
+              </p>
+
+              {isLogin && (
+                <div className="role-grid">
+                  <div className={`role-btn ${role === 'Student' ? 'active' : ''}`} onClick={() => setRole('Student')}>
+                    <span className="role-sub" style={{ color: role === 'Student' ? '#ec4899' : 'var(--text-muted)' }}>Student</span>
+                    <span className="role-main">Student</span>
+                  </div>
+                  <div className={`role-btn ${role === 'Admin' ? 'active' : ''}`} onClick={() => setRole('Admin')}>
+                    <span className="role-sub" style={{ color: role === 'Admin' ? '#ec4899' : 'var(--text-muted)' }}>Admin</span>
+                    <span className="role-main">Admin</span>
+                  </div>
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit}>
+                {!isLogin && (
+                  <div className="input-group" style={{ animation: 'fadeInRight 0.4s ease forwards', opacity: 0, animationDelay: '0.1s' }}>
+                    <input type="text" name="name" value={formData.name} placeholder="Full Name" onChange={handleChange} required />
+                  </div>
+                )}
+
+                <div className="input-group" style={{ animation: 'fadeInRight 0.4s ease forwards', opacity: 0, animationDelay: isLogin ? '0s' : '0.2s' }}>
+                  <input type="email" name="email" value={formData.email} placeholder="Email" onChange={handleChange} required />
+                </div>
+
+                <div className="input-group" style={{ animation: 'fadeInRight 0.4s ease forwards', opacity: 0, animationDelay: isLogin ? '0.1s' : '0.3s' }}>
+                  <input type="password" name="password" value={formData.password} placeholder="Password" onChange={handleChange} required />
+                </div>
+
+                {!isLogin && (
+                  <div className="input-group" style={{ animation: 'fadeInRight 0.4s ease forwards', opacity: 0, animationDelay: '0.4s' }}>
+                    <input type="password" name="confirmPassword" value={formData.confirmPassword} placeholder="Confirm Password" onChange={handleChange} required />
+                  </div>
+                )}
+
+                <button type="submit" className="submit-btn" style={{ animation: 'fadeInRight 0.4s ease forwards', opacity: 0, animationDelay: isLogin ? '0.2s' : '0.5s' }}>
+                  {isLogin ? `Login as ${role}` : 'Create Account'}
+                </button>
+              </form>
+
+              <div className="auth-switch">
+                {isLogin ? "Don't have an account?" : "Already have an account?"}
+                <span onClick={toggleMode}>{isLogin ? 'Sign up' : 'Log in here'}</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<AuthPage />);
+  </script>
+</body>
+
+</html>

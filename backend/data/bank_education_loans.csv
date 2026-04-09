@@ -1,0 +1,7 @@
+Loan_ID,Bank_Name,Scheme_Name,Max_Income_INR,Interest_Rate_Percentage,Max_Amount_INR,Tenure_Years,Description
+BK001,State Bank of India,SBI Student Loan Scheme,1500000,8.15,2000000,15,"Comprehensive education loan with relaxed rules for premier institutions."
+BK002,Punjab National Bank,PNB Saraswati,1200000,8.60,1500000,10,"Flexible education loan scheme providing swift financial resolutions."
+BK003,Canara Bank,IBA Model Education Loan,1000000,8.95,1000000,15,"Model scheme framed by IBA for technical and professional degree programs."
+BK004,HDFC Credila,Credila Education Loan,2500000,9.50,3000000,12,"Top up loan specifically targeted at post-graduate studies with higher limit."
+BK005,Bank of Baroda,Baroda Vidya,800000,8.00,800000,7,"Targeted towards foundational education extending up to intermediate courses."
+BK006,Govt of India,PM Vidya Lakshmi,600000,4.50,750000,5,"Highly subsidized Government scheme mandated through designated banking portals."

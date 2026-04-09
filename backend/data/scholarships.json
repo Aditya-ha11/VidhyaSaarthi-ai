@@ -1,0 +1,47 @@
+[
+  {
+    "id": "SCH001",
+    "name": "National Merit Scholarship",
+    "min_marks": 85,
+    "max_income": 500000,
+    "eligible_categories": ["General", "OBC", "SC", "ST"],
+    "amount": 50000,
+    "description": "For academically excellent students across all categories"
+  },
+  {
+    "id": "SCH002",
+    "name": "SC/ST Excellence Award",
+    "min_marks": 60,
+    "max_income": 300000,
+    "eligible_categories": ["SC", "ST"],
+    "amount": 80000,
+    "description": "Empowering SC/ST students with financial support"
+  },
+  {
+    "id": "SCH003",
+    "name": "OBC Progress Scholarship",
+    "min_marks": 65,
+    "max_income": 400000,
+    "eligible_categories": ["OBC"],
+    "amount": 40000,
+    "description": "Supporting OBC students in higher education"
+  },
+  {
+    "id": "SCH004",
+    "name": "Below Poverty Line Support",
+    "min_marks": 50,
+    "max_income": 200000,
+    "eligible_categories": ["General", "OBC", "SC", "ST"],
+    "amount": 60000,
+    "description": "Financial aid for economically weaker sections"
+  },
+  {
+    "id": "SCH005",
+    "name": "STEM Women Scholarship",
+    "min_marks": 75,
+    "max_income": 600000,
+    "eligible_categories": ["General", "OBC", "SC", "ST"],
+    "amount": 45000,
+    "description": "Encouraging women in Science, Technology, Engineering & Math"
+  }
+]

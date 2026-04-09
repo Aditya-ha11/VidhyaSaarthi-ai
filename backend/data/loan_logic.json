@@ -1,0 +1,127 @@
+{
+  "college_tier": {
+    "Tier_1": 20,
+    "Tier_2": 12,
+    "Tier_3": 5,
+    "Unknown": 0
+  },
+
+  "academics": {
+    "high": {
+      "min": 75,
+      "score": 15
+    },
+    "medium": {
+      "min": 60,
+      "score": 10
+    },
+    "low": {
+      "min": 0,
+      "score": 5,
+      "flag": "academic_risk",
+      "reason": "Low academic performance"
+    }
+  },
+
+  "income": {
+    "high": {
+      "min": 500000,
+      "score": 20
+    },
+    "medium": {
+      "min": 250000,
+      "score": 12
+    },
+    "low": {
+      "min": 0,
+      "score": 5,
+      "flag": "income_risk",
+      "reason": "Low co-applicant income"
+    }
+  },
+
+  "cibil": {
+    "excellent": {
+      "min": 750,
+      "score": 15
+    },
+    "good": {
+      "min": 650,
+      "score": 10
+    },
+    "average": {
+      "min": 600,
+      "score": 5
+    },
+    "poor": {
+      "min": 0,
+      "score": -10,
+      "flag": "credit_risk",
+      "reason": "Very low CIBIL"
+    }
+  },
+
+  "loan_collateral": {
+    "low_loan": {
+      "max": 400000,
+      "score": 15
+    },
+    "medium_loan": {
+      "max": 750000,
+      "score": 10
+    },
+    "high_loan": {
+      "with_full_collateral": 15,
+      "with_partial_collateral": {
+        "score": 8,
+        "flag": "collateral_gap",
+        "reason": "Collateral lower than loan"
+      },
+      "no_collateral": {
+        "score": -15,
+        "flag": "high_risk_loan",
+        "reason": "No collateral for high loan"
+      }
+    }
+  },
+
+  "course_roi": {
+    "high": {
+      "courses": ["Engineering", "Medical", "MBA"],
+      "score": 15
+    },
+    "medium": {
+      "courses": ["Science", "Commerce"],
+      "score": 10
+    },
+    "low": {
+      "courses": ["Arts", "Others"],
+      "score": 5,
+      "flag": "course_risk",
+      "reason": "Low ROI course"
+    }
+  },
+
+  "decision_thresholds": {
+    "approved": 75,
+    "conditional": 55
+  },
+
+  "lenders": {
+    "high": [
+      {"bank": "SBI", "interest": 8.5, "type": "Public"},
+      {"bank": "HDFC Bank", "interest": 9.5, "type": "Private"},
+      {"bank": "ICICI Bank", "interest": 9.25, "type": "Private"}
+    ],
+    "medium": [
+      {"bank": "Bank of Baroda", "interest": 9.0, "type": "Public"},
+      {"bank": "Axis Bank", "interest": 10.5, "type": "Private"},
+      {"bank": "Canara Bank", "interest": 9.2, "type": "Public"}
+    ],
+    "low": [
+      {"bank": "Avanse", "interest": 12.5, "type": "NBFC"},
+      {"bank": "Auxilo", "interest": 13.0, "type": "NBFC"},
+      {"bank": "InCred", "interest": 13.5, "type": "NBFC"}
+    ]
+  }
+}
